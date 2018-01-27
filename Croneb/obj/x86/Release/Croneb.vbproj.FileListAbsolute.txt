@@ -1,0 +1,10 @@
+D:\VB.Net\Croneb\Croneb\bin\Release\Croneb.exe
+D:\VB.Net\Croneb\Croneb\bin\Release\Croneb.pdb
+D:\VB.Net\Croneb\Croneb\bin\Release\Croneb.xml
+D:\VB.Net\Croneb\Croneb\obj\x86\Release\Croneb.Principal.resources
+D:\VB.Net\Croneb\Croneb\obj\x86\Release\Croneb.Resources.resources
+D:\VB.Net\Croneb\Croneb\obj\x86\Release\Croneb.Sobre.resources
+D:\VB.Net\Croneb\Croneb\obj\x86\Release\Croneb.vbproj.GenerateResource.Cache
+D:\VB.Net\Croneb\Croneb\obj\x86\Release\Croneb.exe
+D:\VB.Net\Croneb\Croneb\obj\x86\Release\Croneb.xml
+D:\VB.Net\Croneb\Croneb\obj\x86\Release\Croneb.pdb

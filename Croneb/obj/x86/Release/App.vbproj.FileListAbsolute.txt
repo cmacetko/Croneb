@@ -1,0 +1,2 @@
+D:\VB.Net\Croneb\Croneb\obj\x86\Release\Executavel.xml
+D:\VB.Net\Croneb\Croneb\obj\x86\Release\Executavel.pdb

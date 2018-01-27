@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<sites>
+  <site>
+    <Nome>teste1</Nome>
+    <Link>http://localhost:8080/teste1.php</Link>
+    <AbrirCada>1000</AbrirCada>
+    <Timeout>10000</Timeout>
+  </site>
+  <site>
+    <Nome>teste2</Nome>
+    <Link>http://localhost:8080/teste2.php</Link>
+    <AbrirCada>1000</AbrirCada>
+    <Timeout>10000</Timeout>
+  </site>
+  <site>
+    <Nome>teste3</Nome>
+    <Link>http://localhost:8080/teste3.php</Link>
+    <AbrirCada>1000</AbrirCada>
+    <Timeout>10000</Timeout>
+  </site>
+  <site>
+    <Nome>teste4</Nome>
+    <Link>http://localhost:8080/teste4.php</Link>
+    <AbrirCada>1000</AbrirCada>
+    <Timeout>10000</Timeout>
+  </site>
+  <site>
+    <Nome>teste5</Nome>
+    <Link>http://localhost:8080/teste5.php</Link>
+    <AbrirCada>1000</AbrirCada>
+    <Timeout>10000</Timeout>
+  </site>
+</sites>

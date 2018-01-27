@@ -1,0 +1,12 @@
+M:\VB.Net\Desenvlvidos\Croneb\Croneb\bin\Release\Executavel.exe
+M:\VB.Net\Desenvlvidos\Croneb\Croneb\bin\Release\Executavel.pdb
+M:\VB.Net\Desenvlvidos\Croneb\Croneb\bin\Release\Executavel.xml
+M:\VB.Net\Desenvlvidos\Croneb\Croneb\obj\x86\Release\Executavel.Principal.resources
+M:\VB.Net\Desenvlvidos\Croneb\Croneb\obj\x86\Release\Executavel.Resources.resources
+M:\VB.Net\Desenvlvidos\Croneb\Croneb\obj\x86\Release\Executavel.Sobre.resources
+M:\VB.Net\Desenvlvidos\Croneb\Croneb\obj\x86\Release\Executavel.vbproj.GenerateResource.Cache
+M:\VB.Net\Desenvlvidos\Croneb\Croneb\obj\x86\Release\Executavel.exe
+M:\VB.Net\Desenvlvidos\Croneb\Croneb\obj\x86\Release\Executavel.xml
+M:\VB.Net\Desenvlvidos\Croneb\Croneb\obj\x86\Release\Executavel.pdb
+D:\VB.Net\Croneb\Croneb\obj\x86\Release\Executavel.xml
+D:\VB.Net\Croneb\Croneb\obj\x86\Release\Executavel.pdb
