@@ -5,6 +5,9 @@ Imports System.IO
 
 Public Class Principal
 
+    Private GemThread As Thread()
+    Private Delegate Sub TreathAddLog(ByVal CodLinha As Integer, ByVal Mensagem As String)
+
     Private Sub CarregarListaLinks()
 
         Try
@@ -25,13 +28,17 @@ Public Class Principal
 
     End Sub
 
-    Dim GemThread As Thread()
-
-    Private Delegate Sub TreathAddLog(ByVal CodLinha As Integer, ByVal Mensagem As String)
-
     Private Sub AddLog(ByVal CodLinha As Integer, ByVal Mensagem As String)
 
-        LsbLog.SelectedIndex = LsbLog.Items.Add(DtgListaLinks.Rows(CodLinha).Cells("Nome").Value & " -> " & Mensagem)
+        Try
+
+            LsbLog.SelectedIndex = LsbLog.Items.Add(DtgListaLinks.Rows(CodLinha).Cells("Nome").Value & " -> " & Mensagem)
+
+        Catch ex As Exception
+
+            MessageBox.Show(ex.Message)
+
+        End Try
 
     End Sub
 
@@ -43,7 +50,6 @@ Public Class Principal
 
                 ReDim Preserve GemThread(Linha.Index)
 
-                'GemThread(Linha.Index) = New Thread(DirectCast(Sub() ExecutacaoExecutar(Linha.Index), ThreadStart))
                 GemThread(Linha.Index) = New Thread(AddressOf ExecutacaoExecutar)
                 GemThread(Linha.Index).Name = Linha.Index
                 GemThread(Linha.Index).IsBackground = True
@@ -64,125 +70,172 @@ Public Class Principal
 
     Private Sub ExecutacaoExecutar()
 
-        Dim CodLinha As Integer = Thread.CurrentThread.Name
-        Dim RLink As String = DtgListaLinks.Rows(CodLinha).Cells("Link").Value
-        Dim RAbrirCada As String = DtgListaLinks.Rows(CodLinha).Cells("AbrirCada").Value
-        Dim RTimeout As String = DtgListaLinks.Rows(CodLinha).Cells("Timeout").Value
+        Try
 
-        Dim DataInicio As DateTime
+            If Thread.CurrentThread.IsAlive = True Then
 
-        Dim request As HttpWebRequest
-        Dim response As HttpWebResponse
+                Dim CodLinha As Integer = Thread.CurrentThread.Name
+                Dim RLink As String = DtgListaLinks.Rows(CodLinha).Cells("Link").Value
+                Dim RAbrirCada As String = DtgListaLinks.Rows(CodLinha).Cells("AbrirCada").Value
+                Dim RTimeout As String = DtgListaLinks.Rows(CodLinha).Cells("Timeout").Value
 
-        While (True)
+                Dim DataInicio As DateTime
 
-            DataInicio = Date.Now
+                Dim request As HttpWebRequest
+                Dim response As HttpWebResponse
 
-            Try
+                While (True)
 
-                request = HttpWebRequest.Create(RLink)
-                request.Timeout = RTimeout
+                    DataInicio = Date.Now
 
-                response = request.GetResponse()
+                    Try
 
-                If response.StatusCode = HttpStatusCode.OK Then
+                        request = HttpWebRequest.Create(RLink)
+                        request.Timeout = RTimeout
 
-                    DtgListaLinks.Rows(CodLinha).Cells("Status").Value = ListaImagens.Images(1)
+                        response = request.GetResponse()
 
-                Else
+                        If response.StatusCode = HttpStatusCode.OK Then
 
-                    Me.Invoke(New TreathAddLog(AddressOf Me.AddLog), CodLinha, "ERRO: Http Status Code " & response.StatusCode)
-                    DtgListaLinks.Rows(CodLinha).Cells("Status").Value = ListaImagens.Images(0)
+                            DtgListaLinks.Rows(CodLinha).Cells("Status").Value = ListaImagens.Images(1)
 
-                End If
+                        Else
 
-                response.Close()
+                            Me.Invoke(New TreathAddLog(AddressOf Me.AddLog), CodLinha, "ERRO: Http Status Code " & response.StatusCode)
+                            DtgListaLinks.Rows(CodLinha).Cells("Status").Value = ListaImagens.Images(0)
 
-            Catch ex As Exception
+                        End If
 
-                DtgListaLinks.Rows(CodLinha).Cells("Status").Value = ListaImagens.Images(0)
+                        response.Close()
 
-            End Try
+                    Catch ex As Exception
 
-            Dim DataFim As DateTime = Date.Now
-            Dim DataDiff = (DataFim - DataInicio).TotalSeconds
+                        DtgListaLinks.Rows(CodLinha).Cells("Status").Value = ListaImagens.Images(0)
 
-            DtgListaLinks.Rows(CodLinha).Cells("QtdAberturas").Value = DtgListaLinks.Rows(CodLinha).Cells("QtdAberturas").Value + 1
-            DtgListaLinks.Rows(CodLinha).Cells("Duracao").Value = DataDiff & " seg"
+                    End Try
 
-            Thread.Sleep(RAbrirCada)
+                    Dim DataFim As DateTime = Date.Now
+                    Dim DataDiff = (DataFim - DataInicio).TotalSeconds
 
-        End While
+                    DtgListaLinks.Rows(CodLinha).Cells("QtdAberturas").Value = DtgListaLinks.Rows(CodLinha).Cells("QtdAberturas").Value + 1
+                    DtgListaLinks.Rows(CodLinha).Cells("Duracao").Value = DataDiff & " seg"
+                    Console.WriteLine(Thread.CurrentThread.ThreadState)
+
+                    Thread.Sleep(RAbrirCada)
+
+                End While
+
+            End If
+
+        Catch ex As Exception
+
+            '
+
+        End Try
 
     End Sub
 
     Private Sub TimIsThread_Tick(sender As System.Object, e As System.EventArgs) Handles TimIsThread.Tick
 
-        For Each Thr As Thread In GemThread
+        Try
 
-            If Thr.IsAlive = False Then
+            For Each Thr As Thread In GemThread
 
-                Dim CodLinhas As Integer = CInt(Thr.Name)
+                If Thr.IsAlive = False Then
 
-                Me.Invoke(New TreathAddLog(AddressOf Me.AddLog), CodLinhas, "ERRO: Thread esta instável - " & Thr.ThreadState.ToString)
+                    Dim CodLinhas As Integer = CInt(Thr.Name)
 
-                GemThread(CodLinhas) = New Thread(AddressOf ExecutacaoExecutar)
-                GemThread(CodLinhas).Name = CodLinhas
-                GemThread(CodLinhas).IsBackground = True
+                    Me.Invoke(New TreathAddLog(AddressOf Me.AddLog), CodLinhas, "ERRO: Thread esta instável - " & Thr.ThreadState.ToString)
 
-                GemThread(CodLinhas).Start()
+                    GemThread(CodLinhas) = New Thread(AddressOf ExecutacaoExecutar)
+                    GemThread(CodLinhas).Name = CodLinhas
+                    GemThread(CodLinhas).IsBackground = True
 
-                Me.Invoke(New TreathAddLog(AddressOf Me.AddLog), CodLinhas, "Reiniciado Thread")
+                    GemThread(CodLinhas).Start()
 
-            End If
+                    Me.Invoke(New TreathAddLog(AddressOf Me.AddLog), CodLinhas, "Reiniciado Thread")
 
-        Next
+                End If
+
+            Next
+
+        Catch ex As Exception
+
+            MessageBox.Show(ex.Message)
+
+        End Try
 
     End Sub
 
     Private Sub Principal_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
 
-        CarregarListaLinks()
+        Try
 
-        If DtgListaLinks.Rows.Count > 0 Then
+            CarregarListaLinks()
 
-            IniciaListaExecucao()
+            If DtgListaLinks.Rows.Count > 0 Then
 
-            TimIsThread.Enabled = True
+                IniciaListaExecucao()
 
-        End If
+                TimIsThread.Enabled = True
+
+            End If
+
+        Catch ex As Exception
+
+            MessageBox.Show(ex.Message)
+
+        End Try
 
     End Sub
 
     Private Sub NtfGeral_MouseClick(sender As System.Object, e As System.Windows.Forms.MouseEventArgs) Handles NtfGeral.MouseClick
 
-        If Me.WindowState = FormWindowState.Minimized Then
+        Try
 
-            Me.Show()
-            Me.WindowState = FormWindowState.Normal
-            Me.ShowInTaskbar = True
+            If Me.WindowState = FormWindowState.Minimized Then
 
-        Else
+                Me.Show()
+                Me.WindowState = FormWindowState.Normal
+                Me.ShowInTaskbar = True
 
-            Me.WindowState = FormWindowState.Minimized
-            Me.Hide()
-            Me.ShowInTaskbar = False
+            Else
 
-        End If
+                Me.WindowState = FormWindowState.Minimized
+                Me.Hide()
+                Me.ShowInTaskbar = False
+
+            End If
+
+        Catch ex As Exception
+
+            MessageBox.Show(ex.Message)
+
+        End Try
 
     End Sub
 
     Private Sub Principal_FormClosing(sender As System.Object, e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
 
-        For Each Thr As Thread In GemThread
+        Try
 
-            If Thr.IsAlive = True Then
+            TimIsThread.Stop()
 
-                Thr.Abort()
+            For Each Thr As Thread In GemThread
 
-            End If
+                If Thr.IsAlive = True Then
 
-        Next
+                    Thr.Abort()
+
+                End If
+
+            Next
+
+        Catch ex As Exception
+
+            MessageBox.Show(ex.Message)
+
+        End Try
 
     End Sub
     
@@ -194,13 +247,21 @@ Public Class Principal
 
     Private Sub Principal_Resize(sender As System.Object, e As System.EventArgs) Handles MyBase.Resize
 
-        If Me.WindowState = FormWindowState.Minimized Then
+        Try
 
-            Me.ShowInTaskbar = False
-            Me.WindowState = FormWindowState.Minimized
-            Me.Hide()
+            If Me.WindowState = FormWindowState.Minimized Then
 
-        End If
+                Me.ShowInTaskbar = False
+                Me.WindowState = FormWindowState.Minimized
+                Me.Hide()
+
+            End If
+
+        Catch ex As Exception
+
+            MessageBox.Show(ex.Message)
+
+        End Try
 
     End Sub
 
